@@ -54,20 +54,18 @@ npm run dev
 
 ---
 
-## ☁️ 1-Click Deployment (Render Free-Tier Optimized)
+## ☁️ Deploy on Render
 
-The server codebase features a seamless fallback mechanic leveraging Node `process.env.NODE_ENV === "production"`. When deployed to Render as a singular instance, the Express backend hosts and correctly resolves static routes to `/frontend/build` rendering the whole platform completely free on 1 Node server.
+The `render.yaml` Blueprint builds the React app and serves it from the Express backend as one web service.
 
-1. Publish this repo onto **GitHub**.
-2. Go to [Render Dashboard](https://dashboard.render.com).
-3. Connect Repo -> Create a **Web Service**.
-4. Configure Build Command:
-   `npm run render-build` 
-   *(This cleanly installs API + UI node_modules then generates `react-scripts build`)*
-5. Configure Start Command:
-   `npm start`
-6. Open **Advanced > Environment Variables** and map your `.env` fields heavily defining `NODE_ENV = production`.
-7. Hit **Deploy**. The robust path resolving inside `/backend/server.js` hosts it fluidly!
+1. Push the project to GitHub, including `render.yaml` and the latest changes. Do not upload `backend/.env` or paste secrets into GitHub.
+2. In [Render](https://dashboard.render.com), choose **New > Blueprint**, connect the GitHub repository, and apply the `render.yaml` configuration.
+3. When prompted, set `MONGO_URI` to a MongoDB Atlas connection string. Render generates `JWT_SECRET` automatically.
+4. Wait for the deployment to finish, then open the `onrender.com` URL Render assigns to the service and share that link.
+
+The sample catalog is not inserted automatically. To load it into a new, empty database, run `npm run seed` from the Render Shell. **This deletes all existing users and products first**, and creates the demo admin `admin@shopnest.com` with password `password123`; change that password immediately. Do not run the seed command on a database with data you need to keep.
+
+Checkout requires your own `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` environment variables in Render. Cloudinary and Gmail features also need their corresponding credentials configured if you use them.
 
 ---
 
