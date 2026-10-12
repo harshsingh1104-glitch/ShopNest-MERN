@@ -8,9 +8,9 @@
   justify-content: space-between;
   gap: 28px;
   padding: 12px clamp(18px, 5vw, 72px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(12, 13, 16, 0.84);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.16);
+  border-bottom: 1px solid rgba(232, 219, 231, 0.85);
+  background: rgba(255, 250, 247, 0.86);
+  box-shadow: 0 10px 35px rgba(69, 48, 89, 0.07);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -19,7 +19,7 @@
   display: inline-flex;
   align-items: center;
   gap: 11px;
-  color: #fafaf9;
+  color: #302a42;
   font-family: 'Manrope', sans-serif;
   font-size: 1.35rem;
   font-weight: 800;
@@ -30,10 +30,10 @@
 .navbar-brand img {
   width: 38px;
   height: 38px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(128, 85, 232, 0.15);
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.2);
+  box-shadow: 0 4px 14px rgba(128, 85, 232, 0.18);
 }
 
 .navbar-brand a::after {
@@ -59,14 +59,14 @@
   min-height: 40px;
   align-items: center;
   padding: 0 5px;
-  color: #c1c2c7;
+  color: #625b70;
   font-size: 0.9rem;
   font-weight: 600;
   transition: color 160ms ease;
 }
 
 .navbar-links a:hover {
-  color: #fff;
+  color: #8055e8;
 }
 
 .navbar-links a::after {
@@ -90,10 +90,10 @@
 .btn-logout {
   min-height: 38px;
   padding: 8px 14px;
-  border: 1px solid rgba(248, 113, 113, 0.3);
+  border: 1px solid rgba(205, 85, 112, 0.26);
   border-radius: 10px;
-  background: rgba(248, 113, 113, 0.07);
-  color: #fca5a5;
+  background: rgba(255, 229, 234, 0.65);
+  color: #b64660;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 700;
@@ -102,8 +102,8 @@
 }
 
 .btn-logout:hover {
-  border-color: rgba(248, 113, 113, 0.65);
-  background: rgba(248, 113, 113, 0.14);
+  border-color: rgba(205, 85, 112, 0.55);
+  background: rgba(255, 229, 234, 0.95);
 }
 
 @media (max-width: 760px) {
@@ -147,6 +147,6 @@
   }
 
   .navbar-links a:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(128, 85, 232, 0.09);
   }
 }

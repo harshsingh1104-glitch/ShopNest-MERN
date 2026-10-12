@@ -1,10 +1,10 @@
 .admin-orders {
-  --orders-accent: #f97316;
-  --orders-muted: #a1a1aa;
-  --orders-border: rgba(255, 255, 255, 0.08);
+  --orders-accent: #8055e8;
+  --orders-muted: #81798d;
+  --orders-border: #eee4eb;
   width: min(100% - 40px, 1200px);
   margin: clamp(24px, 5vw, 56px) auto;
-  color: #fafafa;
+  color: #302a42;
 }
 
 .admin-orders__header {
@@ -44,7 +44,7 @@
   padding: 16px 20px;
   border: 1px solid var(--orders-border);
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba(249, 115, 22, 0.13), rgba(24, 24, 27, 0.8) 70%);
+  background: linear-gradient(145deg, #f1eaff, #fff0e9 78%);
 }
 
 .admin-orders__total-label,
@@ -76,7 +76,8 @@
   padding: 16px 18px;
   border: 1px solid var(--orders-border);
   border-radius: 14px;
-  background: #18181b;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(69, 48, 89, 0.055);
 }
 
 .admin-orders__stat strong {
@@ -106,8 +107,8 @@
   overflow: hidden;
   border: 1px solid var(--orders-border);
   border-radius: 18px;
-  background: #18181b;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(69, 48, 89, 0.09);
 }
 
 .admin-orders__panel-heading {
@@ -153,7 +154,7 @@
 
 .admin-orders__table th {
   padding: 14px 20px;
-  background: rgba(255, 255, 255, 0.025);
+  background: #faf7fb;
   color: var(--orders-muted);
   font-size: 0.68rem;
   font-weight: 800;
@@ -163,7 +164,7 @@
 .admin-orders__table td {
   padding: 17px 20px;
   border-top: 1px solid var(--orders-border);
-  color: #d4d4d8;
+  color: #595267;
   font-size: 0.88rem;
 }
 
@@ -172,23 +173,23 @@
 }
 
 .admin-orders__table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.025);
+  background: #fffbf8;
 }
 
 .admin-orders__order-id {
-  color: #fb923c;
+  color: #7650d2;
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.04em;
 }
 
 .admin-orders__customer {
-  color: #fafafa;
+  color: #302a42;
   font-weight: 600;
 }
 
 .admin-orders__amount {
-  color: #fafafa !important;
+  color: #302a42 !important;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -200,8 +201,8 @@
   border: 1px solid var(--orders-border);
   border-radius: 9px;
   appearance: auto;
-  background-color: #27272a;
-  color: #fef3c7;
+  background-color: #f6f1fa;
+  color: #805b16;
   font: inherit;
   font-size: 0.8rem;
   font-weight: 700;
@@ -209,11 +210,11 @@
 }
 
 .admin-orders__status--shipped {
-  color: #bfdbfe;
+  color: #3566a0;
 }
 
 .admin-orders__status--delivered {
-  color: #bbf7d0;
+  color: #25816b;
 }
 
 .admin-orders__status:focus-visible {
@@ -251,7 +252,7 @@
   place-items: center;
   border: 1px solid var(--orders-border);
   border-radius: 13px;
-  background: rgba(249, 115, 22, 0.1);
+  background: #f1eaff;
   color: var(--orders-accent);
   font-size: 1.3rem;
 }
