@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import './AdminOrders.css';
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
@@ -28,50 +29,103 @@ const AdminOrders = () => {
   };
 
   return (
-    <div style={containerStyle}>
-      <h2 style={{ color: '#f97316', marginBottom: '20px' }}>Manage Orders</h2>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={tableStyle}>
-          <thead>
-            <tr style={rowStyle}>
-              <th style={thStyle}>ORDER ID</th>
-              <th style={thStyle}>USER</th>
-              <th style={thStyle}>TOTAL</th>
-              <th style={thStyle}>DATE</th>
-              <th style={thStyle}>STATUS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map(order => (
-              <tr key={order._id} style={rowStyle}>
-                <td style={tdStyle}>{order._id.substring(0, 8)}...</td>
-                <td style={tdStyle}>{order.userId?.name || 'Deleted User'}</td>
-                <td style={tdStyle}>₹{order.totalAmount.toFixed(2)}</td>
-                <td style={tdStyle}>{new Date(order.createdAt).toLocaleDateString()}</td>
-                <td style={tdStyle}>
-                  <select 
-                    value={order.status} 
-                    onChange={(e) => updateStatus(order._id, e.target.value)}
-                    style={{ background: '#09090b', color: '#fff', padding: '6px', border: '1px solid #27272a', borderRadius: '4px', outline: 'none' }}
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                  </select>
-                </td>
+    <main className="admin-orders">
+      <header className="admin-orders__header">
+        <div>
+          <p className="admin-orders__eyebrow">Store operations</p>
+          <h1>Manage orders</h1>
+          <p className="admin-orders__description">
+            Keep track of customer purchases and update delivery progress.
+          </p>
+        </div>
+        <div className="admin-orders__total">
+          <span className="admin-orders__total-label">Total orders</span>
+          <strong>{orders.length}</strong>
+        </div>
+      </header>
+
+      <section className="admin-orders__overview" aria-label="Order status overview">
+        {[
+          { label: 'Pending', value: orders.filter(order => order.status === 'Pending').length },
+          { label: 'Shipped', value: orders.filter(order => order.status === 'Shipped').length },
+          { label: 'Delivered', value: orders.filter(order => order.status === 'Delivered').length }
+        ].map(item => (
+          <article className="admin-orders__stat" key={item.label}>
+            <span className={`admin-orders__stat-dot admin-orders__stat-dot--${item.label.toLowerCase()}`} />
+            <span className="admin-orders__stat-label">{item.label}</span>
+            <strong>{item.value}</strong>
+          </article>
+        ))}
+      </section>
+
+      <section className="admin-orders__panel">
+        <div className="admin-orders__panel-heading">
+          <div>
+            <h2>All orders</h2>
+            <p>Review order details and change their current status.</p>
+          </div>
+          <span className="admin-orders__order-count">{orders.length} orders</span>
+        </div>
+        <div className="admin-orders__table-wrap">
+          <table className="admin-orders__table">
+            <thead>
+              <tr>
+                <th scope="col">ORDER</th>
+                <th scope="col">CUSTOMER</th>
+                <th scope="col">TOTAL</th>
+                <th scope="col">DATE</th>
+                <th scope="col">STATUS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </thead>
+            <tbody>
+              {orders.length > 0 ? orders.map(order => (
+                <tr key={order._id}>
+                  <td data-label="Order">
+                    <span className="admin-orders__order-id">#{order._id.substring(0, 8).toUpperCase()}</span>
+                  </td>
+                  <td data-label="Customer">
+                    <span className="admin-orders__customer">{order.userId?.name || 'Deleted User'}</span>
+                  </td>
+                  <td data-label="Total" className="admin-orders__amount">
+                    ₹{Number(order.totalAmount || 0).toFixed(2)}
+                  </td>
+                  <td data-label="Date">
+                    {new Date(order.createdAt).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </td>
+                  <td data-label="Status">
+                    <select
+                      aria-label={`Status for order ${order._id.substring(0, 8)}`}
+                      className={`admin-orders__status admin-orders__status--${(order.status || 'Pending').toLowerCase()}`}
+                      value={order.status || 'Pending'}
+                      onChange={(e) => updateStatus(order._id, e.target.value)}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                    </select>
+                  </td>
+                </tr>
+              )) : (
+                <tr className="admin-orders__empty-row">
+                  <td colSpan="5">
+                    <div className="admin-orders__empty">
+                      <span className="admin-orders__empty-icon" aria-hidden="true">—</span>
+                      <strong>No orders yet</strong>
+                      <span>New customer orders will appear here.</span>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   );
 };
-
-const containerStyle = { maxWidth: '1200px', margin: '40px auto', padding: '30px', background: '#18181b', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', color: '#fafafa' };
-const tableStyle = { width: '100%', borderCollapse: 'collapse' };
-const rowStyle = { borderBottom: '1px solid rgba(255,255,255,0.1)' };
-const thStyle = { padding: '15px', textAlign: 'left', color: '#a1a1aa', fontSize: '0.9rem' };
-const tdStyle = { padding: '15px', textAlign: 'left' };
 
 export default AdminOrders;

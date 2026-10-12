@@ -1,35 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/footer.css';
 
 const Footer = () => {
   return (
-    <footer style={{
-      background: '#09090b',
-      borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-      padding: '40px 20px',
-      marginTop: 'auto'
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '20px'
-      }}>
+    <footer className="site-footer">
+      <div className="site-footer__inner">
         <div>
-          <h3 style={{ color: '#f97316', marginBottom: '10px' }}>ShopNest</h3>
-          <p style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>Premium E-Commerce Platform.</p>
+          <h3>ShopNest<span>.</span></h3>
+          <p>Good finds for your everyday.</p>
         </div>
-        
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <Link to="/about" style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>About Us</Link>
-          <Link to="/return" style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>Return Policy</Link>
-          <Link to="/disclaimer" style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>Disclaimer</Link>
-        </div>
-        
-        <div style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>
+
+        <nav className="site-footer__links" aria-label="Footer">
+          <Link to="/about">About Us</Link>
+          <Link to="/return">Return Policy</Link>
+          <Link to="/disclaimer">Disclaimer</Link>
+        </nav>
+
+        <div className="site-footer__copyright">
           &copy; {new Date().getFullYear()} ShopNest. All rights reserved.
         </div>
       </div>

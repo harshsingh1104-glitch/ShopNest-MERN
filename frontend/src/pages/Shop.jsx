@@ -26,22 +26,39 @@ const Shop = () => {
 
   return (
     <div className="shop-container">
-      <h2>All Products</h2>
-      <input 
-        type="text" 
-        placeholder="Search products..." 
+      <header className="shop-heading">
+        <div>
+          <p className="section-eyebrow">The ShopNest collection</p>
+          <h1>Find your next favorite.</h1>
+          <p>Explore thoughtful picks for everyday life.</p>
+        </div>
+      </header>
+      <label className="sr-only" htmlFor="product-search">Search products</label>
+      <input
+        id="product-search"
+        type="search"
+        placeholder="Search products..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="search-bar"
       />
       {loading ? (
-        <div>Loading...</div>
+        <div className="shop-empty" role="status">Loading the collection…</div>
       ) : (
-        <div className="product-grid">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+        <>
+          <p className="shop-results" aria-live="polite">
+            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+          </p>
+          {filteredProducts.length > 0 ? (
+            <div className="product-grid">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <p className="shop-empty">No products match “{search}”. Try another search.</p>
+          )}
+        </>
       )}
     </div>
   );
