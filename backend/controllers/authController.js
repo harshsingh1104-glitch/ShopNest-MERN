@@ -81,4 +81,24 @@ const getUsers = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUsers };
+const setProductManager = async (req, res) => {
+  try {
+    if (typeof req.body.enabled !== 'boolean') {
+      return res.status(400).json({ message: 'enabled must be a boolean' });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (user.role === 'admin') {
+      return res.status(400).json({ message: 'Admin roles cannot be changed here' });
+    }
+
+    user.role = req.body.enabled ? 'productManager' : 'user';
+    await user.save();
+    res.json({ _id: user._id, role: user.role });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, getUsers, setProductManager };

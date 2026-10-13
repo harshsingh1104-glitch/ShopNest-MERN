@@ -5,7 +5,6 @@ const connectDB = require('./config/db');
 const path = require('path');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
-connectDB();
 
 const app = express();
 
@@ -22,6 +21,7 @@ app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
+app.use('/api/chat', require('./routes/chatRoutes'));
 
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
@@ -37,4 +37,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+};
+
+startServer();

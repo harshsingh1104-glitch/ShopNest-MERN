@@ -28,7 +28,7 @@ const Navbar = () => {
         {user ? (
           <>
             <li><Link to="/profile">Hi, {user.name}</Link></li>
-            {user.role === 'admin' && <li><Link to="/admin">Admin</Link></li>}
+            {['admin', 'productManager'].includes(user.role) && <li><Link to="/admin">{user.role === 'admin' ? 'Admin' : 'Products'}</Link></li>}
             <li><button onClick={handleLogout} className="btn-logout">Logout</button></li>
           </>
         ) : (

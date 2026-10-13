@@ -6,4 +6,12 @@ const admin = (req, res, next) => {
   }
 };
 
-module.exports = { admin };
+const productManager = (req, res, next) => {
+  if (req.user && ['admin', 'productManager'].includes(req.user.role)) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Not authorized to manage products' });
+  }
+};
+
+module.exports = { admin, productManager };
