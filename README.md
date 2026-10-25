@@ -74,6 +74,7 @@ The `render.yaml` Blueprint builds the React app and serves it from the Express 
 The sample catalog is not inserted automatically. To load it into a new, empty database, run `npm run seed` from the Render Shell. **This deletes all existing users and products first**, and creates the demo admin `admin@shopnest.com` with password `password123`; change that password immediately. Do not run the seed command on a database with data you need to keep.
 
 Checkout requires your own `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` environment variables in Render. Cloudinary and Gmail features also need their corresponding credentials configured if you use them.
+Use Razorpay test-mode credentials for local testing. Keep both keys in `backend/.env` or deployment environment settings; never hard-code them in the frontend or commit them to source control. Checkout only creates an order after Razorpay payment verification succeeds.
 The local Ollama setup is intended for development on a machine running the backend. For deployment, Ollama must be installed and running on a host reachable by the backend; set `OLLAMA_BASE_URL` to that service and ensure the selected `OLLAMA_MODEL` is downloaded there.
 
 ---

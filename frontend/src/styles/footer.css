@@ -1,7 +1,7 @@
 .site-footer {
   margin-top: 48px;
-  border-top: 1px solid #eee3eb;
-  background: rgba(255, 247, 244, 0.82);
+  border-top: 1px solid var(--color-border);
+  background: #fff;
 }
 
 .site-footer__inner {
@@ -44,7 +44,7 @@
 }
 
 .site-footer__links a:hover {
-  color: #7650d2;
+  color: var(--color-accent-strong);
 }
 
 .site-footer__copyright {

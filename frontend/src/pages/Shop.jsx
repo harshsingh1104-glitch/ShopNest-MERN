@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import '../styles/product.css';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get('search') || '';
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,15 +24,17 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="shop-container">
       <header className="shop-heading">
         <div>
-          <p className="section-eyebrow">The ShopNest collection</p>
-          <h1>Find your next favorite.</h1>
-          <p>Explore thoughtful picks for everyday life.</p>
+          <p className="section-eyebrow">Shop all</p>
+          <h1>Everyday finds, all in one place.</h1>
+          <p>Browse the latest products and find what you need.</p>
         </div>
       </header>
       <label className="sr-only" htmlFor="product-search">Search products</label>
@@ -39,7 +43,7 @@ const Shop = () => {
         type="search"
         placeholder="Search products..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(event) => setSearchParams(event.target.value ? { search: event.target.value } : {}, { replace: true })}
         className="search-bar"
       />
       {loading ? (

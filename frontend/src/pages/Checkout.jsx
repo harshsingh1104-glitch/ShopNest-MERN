@@ -10,6 +10,7 @@ const Checkout = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isPaying, setIsPaying] = useState(false);
 
   const [address, setAddress] = useState({
     fullName: '', street: '', city: '', postalCode: '', country: ''
@@ -18,60 +19,81 @@ const Checkout = () => {
   const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const handlePayment = async () => {
+    if (!cartItems.length) {
+      alert('Your cart is empty');
+      return;
+    }
+
     try {
       const orderRes = await fetch('/api/payment/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: totalPrice })
       });
-      const orderData = await orderRes.json();
+      const responseBody = await orderRes.text();
+      let orderData = {};
+      try {
+        orderData = responseBody ? JSON.parse(responseBody) : {};
+      } catch {
+        orderData.message = responseBody.startsWith('<') ? '' : responseBody;
+      }
 
       if (!orderRes.ok) {
-        // Razorpay unconfigured exception handler
-        const fallback = window.confirm("Razorpay keys unconfigured on backend. Use Student Bypass Mode to place test order?");
-        if (fallback) {
-          return bypassPayment();
-        } else {
-          return alert("Payment failed to initialize");
-        }
+        const message = orderData.message || orderData.error?.description || orderData.error?.message;
+        throw new Error(message || `Payment order request failed (HTTP ${orderRes.status})`);
+      }
+
+      if (!orderData.id || !orderData.key_id || !orderData.amount || !orderData.currency) {
+        throw new Error('The server returned incomplete Razorpay order details. Check the backend configuration and restart the server.');
+      }
+
+      if (!window.Razorpay) {
+        throw new Error('Razorpay Checkout did not load. Please refresh and try again.');
       }
 
       const options = {
-        key: 'rzp_test_dummykey123', // Student dummy fallback
+        key: orderData.key_id,
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'ShopNest',
         description: 'Test Transaction',
         order_id: orderData.id,
         handler: async function (response) {
-          const verifyRes = await fetch('/api/payment/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(response)
-          });
-          if (verifyRes.ok) {
-            const saveOrderRes = await fetch('/api/orders', {
+          try {
+            const verifyRes = await fetch('/api/payment/verify', {
               method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${user.token}`
-              },
-              body: JSON.stringify({
-                items: cartItems,
-                totalAmount: totalPrice,
-                address,
-                paymentId: response.razorpay_payment_id
-              })
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(response)
             });
+            if (verifyRes.ok) {
+              const saveOrderRes = await fetch('/api/orders', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${user.token}`
+                },
+                body: JSON.stringify({
+                  items: cartItems,
+                  totalAmount: totalPrice,
+                  address,
+                  paymentId: response.razorpay_payment_id
+                })
+              });
 
-            if (saveOrderRes.ok) {
-              dispatch(clearCart());
-              navigate('/ordersuccess');
+              if (saveOrderRes.ok) {
+                dispatch(clearCart());
+                navigate('/ordersuccess');
+              } else {
+                const saveOrderData = await saveOrderRes.json();
+                alert(saveOrderData.message || 'Order saving failed');
+              }
             } else {
-              alert('Order saving failed');
+              const verifyData = await verifyRes.json();
+              alert(verifyData.message || 'Payment verification failed');
             }
-          } else {
-            alert('Payment verification failed');
+          } catch (error) {
+            console.error(error);
+            alert(error.message || 'Unable to complete payment verification');
           }
         },
         prefill: {
@@ -85,29 +107,13 @@ const Checkout = () => {
       };
       
       const rzp1 = new window.Razorpay(options);
+      rzp1.on('payment.failed', (response) => {
+        alert(response.error?.description || 'Payment failed. Please try again.');
+      });
       rzp1.open();
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const bypassPayment = async () => {
-    const saveOrderRes = await fetch('/api/orders', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.token}`
-      },
-      body: JSON.stringify({
-        items: cartItems,
-        totalAmount: totalPrice,
-        address,
-        paymentId: 'bypass_txn_' + Date.now()
-      })
-    });
-    if (saveOrderRes.ok) {
-      dispatch(clearCart());
-      navigate('/ordersuccess');
+      alert(error.message || 'Unable to start payment. Please try again.');
     }
   };
 
@@ -118,7 +124,8 @@ const Checkout = () => {
       navigate('/login');
       return;
     }
-    handlePayment();
+    setIsPaying(true);
+    handlePayment().finally(() => setIsPaying(false));
   };
 
   return (
@@ -134,7 +141,9 @@ const Checkout = () => {
           <input type="text" placeholder="Country" required value={address.country} onChange={(e) => setAddress({...address, country: e.target.value})} />
           <div className="checkout-summary">
             <h4>Total to Pay: ₹{totalPrice.toFixed(2)}</h4>
-            <button type="submit" className="btn">Pay Now</button>
+            <button type="submit" className="btn" disabled={isPaying}>
+              {isPaying ? 'Starting payment...' : 'Pay Now'}
+            </button>
           </div>
         </form>
       </div>
